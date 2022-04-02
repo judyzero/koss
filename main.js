@@ -52,11 +52,9 @@ app.get('/page/:pageId', function(request, response) {
         <pre>Email      ${sanitizedEmail}</pre>
         <pre>Phone      ${sanitizedPhone}</pre>`,
         `<form action="/contacts/:pageId" method="post">
-        <input type="hidden" name="id" value="${sanitizedTitle}"></form>
-
-        <button type="button" onclick="location.href='/contacts/:pageId';">create</button>
+        <input type="hidden" name="id" value="${sanitizedTitle}">
         <button type="button" onclick="location.href='/contacts/${sanitizedTitle}/edit';">update</button>
-        <input type="submit" value="delete">
+        <input type="submit" value="delete"></form>
         `
       );
       response.send(html);
