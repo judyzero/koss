@@ -6,8 +6,6 @@ var qs = require('querystring');
 var sanitizeHtml = require('sanitize-html');
 var template = require('./lib/template.js');
 
-//route, routing
-//app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/', function(request, response) { 
   fs.readdir('./data', function(error, filelist){
     var title = '';
@@ -15,11 +13,25 @@ app.get('/', function(request, response) {
     var list = template.list(filelist);
     var html = template.HTML(title, list,
       `<h2>${title}</h2>${description}`,
-      `<a href="/contacts">create</a>`
+      ``
     ); 
     response.send(html);
   });
 });
+
+app.get('/contacts', function(request, response) { 
+  fs.readdir('./data', function(error, filelist){
+    var title = '';
+    var description = '';
+    var list = template.list(filelist);
+    var html = template.HTML(title, list,
+      `<h2>${title}</h2>${description}`,
+      ``
+    ); 
+    response.send(html);
+  });
+});
+
 app.get('/page/:pageId', function(request, response) { 
   fs.readdir('./data', function(error, filelist){
     var filteredId = path.parse(request.params.pageId).base;
@@ -155,4 +167,3 @@ app.post('/delete_process', function(request, response){
 app.listen(3000, function() {
   console.log('Example app listening on port 3000!')
 });
-
