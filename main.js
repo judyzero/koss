@@ -69,7 +69,7 @@ app.get('/contacts/new', function(request, response){
   fs.readdir('./data', function(error, filelist){
     var title = 'KOSS';
     var list = template.list(filelist);
-    var html = template.HTML(title, list, `
+    var html = template.HTML(title, list='', `
       <form action="/contacts" method="post">
         <h1>New</h1>
         <p>Name</p>
@@ -130,8 +130,7 @@ app.get('/contacts/:pageId/edit', function(request, response){
             <input type="submit">
           </p>
         </form>
-        `,
-        `<a href="/create">create</a> <a href="/update?id=${title}">update</a>`
+        `, ''
       );
       response.send(html);
     });
