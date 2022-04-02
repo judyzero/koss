@@ -56,12 +56,13 @@ app.get('/page/:pageId', function(request, response) {
   });
 });
 
+//신규 연락처 생성 폼 조회
 app.get('/contacts/new', function(request, response){
   fs.readdir('./data', function(error, filelist){
     var title = 'KOSS';
     var list = template.list(filelist);
     var html = template.HTML(title, list, `
-      <form action="/create_process" method="post">
+      <form action="/contacts" method="post">
         <h1>New</h1>
         <p>Name</p>
         <p><input type="text" name="name" placeholder="name"></p>
@@ -78,7 +79,8 @@ app.get('/contacts/new', function(request, response){
   });
 });
 
-app.post('/create_process', function(request, response){
+//신규 연락처 생성
+app.post('/contacts', function(request, response){
   var body = '';
   request.on('data', function(data){
       body = body + data;
