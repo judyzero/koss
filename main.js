@@ -45,7 +45,7 @@ app.get('/page/:pageId', function(request, response) {
       var html = template.HTML(sanitizedTitle, list,
         `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
         ` <a href="/contacts">create</a>
-          <a href="/contacts/${sanitizedTitle}">update</a>
+          <a href="/contacts/${sanitizedTitle}/edit">update</a>
           <form action="/delete_process" method="post">
             <input type="hidden" name="id" value="${sanitizedTitle}">
             <input type="submit" value="delete">
@@ -98,7 +98,7 @@ app.post('/contacts', function(request, response){
 });
 
 //특정 연락처 수정 폼 제공
-app.get('/contacts/:pageId', function(request, response){
+app.get('/contacts/:pageId/edit', function(request, response){
   fs.readdir('./data', function(error, filelist){
     var filteredId = path.parse(request.params.pageId).base;
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
@@ -109,7 +109,7 @@ app.get('/contacts/:pageId', function(request, response){
       var phone = array[1];
       var html = template.HTML(title, list,
         `
-        <form action="/update_process" method="post">
+        <form action="/contacts/:pageId" method="post">
           <input type="hidden" name="id" value="${title}">
           <h1>Edit</h1>
           <p>Name</p>
@@ -130,7 +130,7 @@ app.get('/contacts/:pageId', function(request, response){
   });
 });
 
-app.post('/update_process', function(request, response){
+app.post('/contacts/:pageId', function(request, response){
   var body = '';
   request.on('data', function(data){
       body = body + data;
