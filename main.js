@@ -19,6 +19,7 @@ app.get('/', function(request, response) {
   });
 });
 
+//전체 연락처 조회
 app.get('/contacts', function(request, response) { 
   fs.readdir('./data', function(error, filelist){
     var title = '';
@@ -32,24 +33,31 @@ app.get('/contacts', function(request, response) {
   });
 });
 
+//특정 연락처 상세정보 조회
 app.get('/page/:pageId', function(request, response) { 
   fs.readdir('./data', function(error, filelist){
     var filteredId = path.parse(request.params.pageId).base;
     fs.readFile(`data/${filteredId}`, 'utf8', function(err, description){
       var title = request.params.pageId;
+      var array = fs.readFileSync(`data/${filteredId}`).toString().split("\n");
+      var email = array[0];
+      var phone = array[1];
       var sanitizedTitle = sanitizeHtml(title);
-      var sanitizedDescription = sanitizeHtml(description, {
-        allowedTags:['h1']
-      });
+      var sanitizedEmail = sanitizeHtml(email);
+      var sanitizedPhone = sanitizeHtml(phone);
       var list = template.list(filelist);
-      var html = template.HTML(sanitizedTitle, list,
-        `<h2>${sanitizedTitle}</h2>${sanitizedDescription}`,
-        ` <a href="/contacts">create</a>
-          <a href="/contacts/${sanitizedTitle}/edit">update</a>
-          <form action="/delete_process" method="post">
-            <input type="hidden" name="id" value="${sanitizedTitle}">
-            <input type="submit" value="delete">
-          </form>`
+      var html = template.HTML(sanitizedTitle, list='',
+        `<h1>Show</h1>
+        <h2>${sanitizedTitle}</h2>
+        <pre>Email      ${sanitizedEmail}</pre>
+        <pre>Phone      ${sanitizedPhone}</pre>`,
+        `<form action="/contacts/:pageId" method="post">
+        <input type="hidden" name="id" value="${sanitizedTitle}"></form>
+
+        <button type="button" onclick="location.href='/contacts/:pageId';">create</button>
+        <button type="button" onclick="location.href='/contacts/${sanitizedTitle}/edit';">update</button>
+        <input type="submit" value="delete">
+        `
       );
       response.send(html);
     });
@@ -130,6 +138,7 @@ app.get('/contacts/:pageId/edit', function(request, response){
   });
 });
 
+//특정 연락처 정보 수정
 app.post('/contacts/:pageId', function(request, response){
   var body = '';
   request.on('data', function(data){
@@ -152,7 +161,8 @@ app.post('/contacts/:pageId', function(request, response){
   });
 });
 
-app.post('/delete_process', function(request, response){
+//연락처 삭제
+app.post('/contacts/:pageId', function(request, response){
   var body = '';
   request.on('data', function(data){
       body = body + data;
@@ -162,7 +172,7 @@ app.post('/delete_process', function(request, response){
       var id = post.id;
       var filteredId = path.parse(id).base;
       fs.unlink(`data/${filteredId}`, function(error){
-        response.redirect('/');
+        response.redirect('/contacts');
       })
   });
 });
