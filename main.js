@@ -56,7 +56,7 @@ app.get('/page/:pageId', function(request, response) {
   });
 });
 
-app.get('/contacts', function(request, response){
+app.get('/contacts/new', function(request, response){
   fs.readdir('./data', function(error, filelist){
     var title = 'KOSS';
     var list = template.list(filelist);
